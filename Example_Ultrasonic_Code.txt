@@ -1,0 +1,34 @@
+#define TRIG_PIN 2 
+#define ECHO_PIN 3 
+ 
+long duration; 
+float distance; 
+ 
+float minDist = 5.0;   // full roll 
+float maxDist = 20.0;  // empty roll 
+ 
+void setup() { 
+ pinMode(TRIG_PIN, OUTPUT); 
+ pinMode(ECHO_PIN, INPUT); 
+ Serial.begin(9600); 
+} 
+ 
+void loop() { 
+ digitalWrite(TRIG_PIN, LOW); 
+ delayMicroseconds(2); 
+ digitalWrite(TRIG_PIN, HIGH); 
+ delayMicroseconds(10); 
+ digitalWrite(TRIG_PIN, LOW); 
+ 
+ duration = pulseIn(ECHO_PIN, HIGH); 
+ distance = duration * 0.034 / 2; 
+ 
+ int percentage = map(distance, minDist, maxDist, 100, 0); 
+ percentage = constrain(percentage, 0, 100); 
+ 
+ Serial.print("Toilet Paper: "); 
+ Serial.print(percentage); 
+ Serial.println("%"); 
+ 
+ delay(1000); 
+} 
