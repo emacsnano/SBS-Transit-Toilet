@@ -1,0 +1,47 @@
+// Baseline values (to be calibrated in clean air conditions) 
+int mq135_baseline = 180; 
+int mq137_baseline = 150; 
+ 
+// Sensor pins 
+int mq135_pin = A0; 
+int mq137_pin = A1; 
+ 
+// Fan control pin 
+int fanPin = 7; 
+ 
+void setup() { 
+  pinMode(fanPin, OUTPUT); 
+  Serial.begin(9600); 
+} 
+ 
+void loop() { 
+  int mq135_value = analogRead(mq135_pin); 
+  int mq137_value = analogRead(mq137_pin); 
+ 
+  int mq135_delta = mq135_value - mq135_baseline; 
+  int mq137_delta = mq137_value - mq137_baseline; 
+ 
+  // Default state 
+  int fanState = LOW; 
+ 
+  // Low-level activation 
+  if (mq137_delta > 60 || mq135_delta > 120) { 
+    fanState = HIGH; 
+  } 
+ 
+  // High-level override (ensures strong ventilation) 
+  if (mq137_delta > 120 || mq135_delta > 150) { 
+    fanState = HIGH; 
+  } 
+ 
+  digitalWrite(fanPin, fanState); 
+ 
+  Serial.print("MQ135: "); 
+  Serial.print(mq135_delta); 
+  Serial.print(" | MQ137: "); 
+  Serial.print(mq137_delta); 
+  Serial.print(" | Fan: "); 
+  Serial.println(fanState); 
+ 
+  delay(1000); 
+} 
