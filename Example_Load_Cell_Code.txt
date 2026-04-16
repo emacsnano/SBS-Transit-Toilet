@@ -1,0 +1,29 @@
+#include "HX711.h" 
+ 
+#define DT 3 
+#define SCK 2 
+ 
+HX711 scale; 
+ 
+float fullWeight = 500.0;   // grams 
+float emptyWeight = 50.0;   // grams 
+ 
+void setup() { 
+ Serial.begin(9600); 
+ scale.begin(DT, SCK); 
+ scale.set_scale(); 
+ scale.tare(); 
+} 
+ 
+void loop() { 
+ float weight = scale.get_units(5); 
+ 
+ int percentage = (weight - emptyWeight) * 100 / (fullWeight - emptyWeight); 
+ percentage = constrain(percentage, 0, 100); 
+ 
+ Serial.print("Toilet Paper: "); 
+ Serial.print(percentage); 
+ Serial.println("%"); 
+ 
+ delay(1000); 
+} 
