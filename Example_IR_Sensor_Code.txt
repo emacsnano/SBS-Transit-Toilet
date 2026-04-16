@@ -1,0 +1,21 @@
+#define IR_PIN A0 
+ 
+float minVal = 300;  // full roll 
+float maxVal = 100;  // empty roll 
+ 
+void setup() { 
+ Serial.begin(9600); 
+} 
+ 
+void loop() { 
+ int sensorValue = analogRead(IR_PIN); 
+ 
+ int percentage = map(sensorValue, minVal, maxVal, 100, 0); 
+ percentage = constrain(percentage, 0, 100); 
+ 
+ Serial.print("Toilet Paper: "); 
+ Serial.print(percentage); 
+ Serial.println("%"); 
+ 
+ delay(1000); 
+} 
